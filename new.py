@@ -7,7 +7,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         'project',
-        nargs='*',
+        nargs='+',
         type=str,
         help='Project name you want to create'
     )
