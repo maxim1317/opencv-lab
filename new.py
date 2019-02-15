@@ -144,7 +144,9 @@ def main():
     projects = get_args()
 
     for project in projects:
+        print()
         print(' Setting up ' + colored(project, color='yellow') + '...')
+        print()
 
         for step in steps.values():
             out  = step['Description']
@@ -155,8 +157,10 @@ def main():
             print(out, end=wait)
             if step['Function'](project):
                 print(out, end=ok)
+                print()
             else:
                 print(out, end=fail)
+                print()
                 break
 
     return
