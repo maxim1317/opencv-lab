@@ -1,4 +1,4 @@
-"Copyright 2019 SnesarevMS"
+// Copyright 2019 SnesarevMS
 
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"

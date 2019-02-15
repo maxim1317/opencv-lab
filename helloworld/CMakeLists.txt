@@ -9,6 +9,7 @@ message("opencv version: " ${OpenCV_VERSION})
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 add_executable(helloworld.o helloworld.cpp)
+
 target_link_libraries(helloworld.o ${OpenCV_LIBS})
 
 add_custom_target(run
