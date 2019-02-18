@@ -8,9 +8,9 @@ message("opencv version: " ${OpenCV_VERSION})
 
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-add_executable(ex_drawing_line.cpp.o ex_drawing_line.cpp)
+add_executable(ex_drawing_line.o ex_drawing_line.cpp)
 
-target_link_libraries(ex_drawing_line.cpp.o ${OpenCV_LIBS})
+target_link_libraries(ex_drawing_line.o ${OpenCV_LIBS})
 
 add_custom_target(run
     COMMAND ex_drawing_line.o
