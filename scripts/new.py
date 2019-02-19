@@ -126,6 +126,12 @@ def mk_cmake(name):
     return True
 
 
+def call_run(project):
+    import subprocess
+
+    return subprocess.call(['./run ' + project], shell=True)
+
+
 def main():
     steps = {
         0: {
@@ -163,6 +169,8 @@ def main():
                 print(out, end=fail)
                 print()
                 break
+
+        call_run(projects[len(projects) - 1])
 
     return
 

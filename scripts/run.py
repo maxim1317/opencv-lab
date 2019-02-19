@@ -194,15 +194,20 @@ def mk_make(dir):
 
     sample = {
         'all':
-            'all: build\n'                          +
+            'all: build\n'                                  +
             '\n',
         'build':
-            'build:\n'                                +
-            '\t@-make -s -C ' + 'build' + '\n'           +
+            'build:\n'                                      +
+            '\t@-make -s -C ' + 'build' + '\n'              +
             '\n',
         'run':
-            'run:\n'                                +
-            '\t@-make -s -C ' + 'build' + ' run' + '\n'
+            'run:\n'                                        +
+            '\t@-make -s -C ' + 'build' + ' run' + '\n'     +
+            '\n',
+        'clean':
+            'clean:\n'                                      +
+            '\t@-make -s -C ' + 'build' + ' clean' + '\n'   +
+            '.PHONY: clean\n'
     }
 
     try:
@@ -219,23 +224,41 @@ def mk_root_make(cur, projects):
 
     mf = {
         'all':
-            'all: ' + cur + '_run\n' +
+            'all: ' + 'run\n'           +
+            '\n',
+        'run':
+            'run: ' + cur + '_run\n'    +
+            '\n',
+        'clean':
+            'clean: ' + cur + '_clean\n'  +
             '\n'
     }
 
+    to_clean =          \
+        'cleanall:'
+
     for p in projects:
-        build_tg =                                        \
-            p['name'] + ':\n'                           + \
-            '\t@-make -s -C ' + p['dir'] + '\n'              + \
+        comment  = '# ' + p['name'].upper() + '\n'
+        build_tg =                                            \
+            p['name'] + ':\n'                               + \
+            '\t@-make -s -C ' + p['dir'] + '\n'             + \
             '\n'
-        run_tg   =                                        \
-            p['name'] + '_run' + ':\n'                  + \
-            '\t@-make -s -C ' + p['dir'] + ' run' + '\n'
-        phony    =                                        \
-            '.PHONY: ' + p['name'] + '_run' + '\n'      + \
+        run_tg   =                                            \
+            p['name'] + '_run' + ':\n'                      + \
+            '\t@-make -s -C ' + p['dir'] + ' run' + '\n'    + \
+            '.PHONY: ' + p['name'] + '_run' + '\n'          + \
+            '\n'
+        clean    =                                            \
+            p['name'] + '_clean' + ':\n'                    + \
+            '\t@-make -s -C ' + p['dir'] + ' clean' + '\n'  + \
+            '.PHONY: ' + p['name'] + '_clean' + '\n'        + \
             '\n'
 
-        mf[p['name']] = build_tg + run_tg + phony
+        to_clean += ' ' + p['name'] + '_clean'
+        mf[p['name']] = comment + build_tg + run_tg + clean
+
+    to_clean += '\n'
+    mf['cleanall'] = to_clean
 
     try:
         with open('Makefile', 'w+') as file:
