@@ -1,3 +1,4 @@
+#! /home/oberon/anaconda3/bin/python
 from termcolor import colored
 
 
