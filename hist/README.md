@@ -12,7 +12,8 @@ hist [PATH_TO_IMAGE]
 
 ### Зависимости
 
-- __OpenCV__ >=_3.4.0_
+- __OpenCV__ >=_3.4.0
+    - __opencv_contrib__ >=_3.4.0 
 - __CMake__ >=_3.13_
 
 _Linux_:
