@@ -267,7 +267,7 @@ int main(int argc, char const *argv[]) {
 
     // Plotting histogram
     cv::Mat hist_plot;
-    hist_plot = PlotGraph(hist);
+    hist_plot = plot_hist(hist);
 
     // Merging image and histogram
     int rows = resized_image.rows;
