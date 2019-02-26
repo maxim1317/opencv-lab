@@ -1,6 +1,18 @@
 #include "headers/hist.h"
 
-cv::Mat PlotGraph(std::vector<cv::Mat> data) {
+
+// Returns cv::Mat with plotted histogram of
+// 4 channels: Luminosity(Greyscale), Red, Green and Blue
+//
+// Arguments:
+//     std::vector<cv::Mat> data - data for all 4 channels + x values in format:
+//        data[0] - x, values from 0 to 255
+//        data[1] - L   \
+//        data[2] - R == \ per channel histograms as cv::Mat N:1
+//        data[3] - G == /        with values as doubles
+//        data[4] - B   /
+//
+cv::Mat plot_hist(std::vector<cv::Mat> data) {
 
     cv::Mat x, yL, yR, yG, yB;
     cv::Mat plot_resultL, plot_resultR, plot_resultG, plot_resultB;
@@ -152,6 +164,18 @@ cv::Mat PlotGraph(std::vector<cv::Mat> data) {
 }
 
 
+
+// Returns std::vector of cv::Mat with histograms
+// for all 4 channels + x values in format:
+//    data[0] - x, cv::Mat N:1 with values from 0 to 255
+//    data[1] - L   \
+//    data[2] - R == \ per channel histograms as cv::Mat N:1
+//    data[3] - G == /        with values as doubles
+//    data[4] - B   /
+//
+// Arguments:
+//     std::string path - path to the image
+//
 std::vector<cv::Mat> get_hist(const std::string path) {
 
     std::vector<cv::Mat> hist;
@@ -217,11 +241,10 @@ std::vector<cv::Mat> get_hist(const std::string path) {
 
 int main(int argc, char const *argv[]) {
 
-    printf("%d\n", argc);
-
     std::string path;
-    std::string def = "../../pics/logo.jpg";
+    std::string def = "../../pics/logo.jpg";  // Default path, doesn't work on Windows
 
+    // Getting image path
     if (argc == 2) {
         path = argv[1];
     }
@@ -229,20 +252,24 @@ int main(int argc, char const *argv[]) {
         path = def;
     }
 
-
+    // Calculating histogram
     std::vector<cv::Mat> hist;
     hist = get_hist(path);
 
+    // Exporting data for gnuplot (or visual analysis)
     exp_gnu("../plot/luminosity.txt", hist);
 
+    // Reading and resising image
     cv::Mat3b image = cv::imread(path, cv::IMREAD_COLOR);
 
     cv::Mat3b resized_image;
     cv::resize(image, resized_image, cv::Size(512, 512));
 
+    // Plotting histogram
     cv::Mat hist_plot;
     hist_plot = PlotGraph(hist);
 
+    // Merging image and histogram
     int rows = resized_image.rows;
     int cols = resized_image.cols + hist_plot.cols;
 
@@ -251,11 +278,12 @@ int main(int argc, char const *argv[]) {
     resized_image.copyTo(merged_img(cv::Rect(0, 0, resized_image.cols, resized_image.rows)));
     hist_plot.copyTo(merged_img(cv::Rect(resized_image.cols, 0, hist_plot.cols, hist_plot.rows)));
 
+    // Showing final result
     cv::namedWindow("Histogram", cv::WINDOW_AUTOSIZE);
     cv::imshow("Histogram", merged_img);
     cv::waitKey(0);
 
-
+    // Writing steps to steps directory
     cv::imwrite("../steps/resized.png", resized_image);
     cv::imwrite("../steps/merged.png", merged_img);
 

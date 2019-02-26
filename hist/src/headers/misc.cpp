@@ -3,9 +3,9 @@
 
 #include "hist.h"
 
-void exp_gnu(const char *s, std::vector<cv::Mat> hist) {
+void exp_gnu(const char *file, std::vector<cv::Mat> hist) {
     FILE *out;
-    out = fopen(s, "w");
+    out = fopen(file, "w");
     if (!out) {
         printf("\
             Broken lines, broken strings\n\
@@ -27,7 +27,7 @@ void exp_gnu(const char *s, std::vector<cv::Mat> hist) {
     }
     fclose(out);
 
-    printf("Exported to %s\n", s);
+    printf("Exported to %s\n", file);
 }
 
 std::string type2str(int type) {
