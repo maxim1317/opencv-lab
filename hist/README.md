@@ -1,7 +1,7 @@
 # Histogram
 
 ```bash
-    hist [PATH_TO_IMAGE] 
+hist [PATH_TO_IMAGE] 
 ```
 
 ## Что это?
@@ -48,7 +48,7 @@ _Windows_:
 hist.exe [PATH_TO_IMAGE] 
 ```
 
-## Structure
+## Структура
 
 __src/__
 - [hist.cpp](src/hist.cpp) - Основной файл проекта, тут код для гистограммы и main()
