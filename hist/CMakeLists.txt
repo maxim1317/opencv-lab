@@ -4,16 +4,19 @@ project(hist)
 
 find_package(OpenCV REQUIRED)
 
-message("opencv version: " ${OpenCV_VERSION})
+message(" OpenCV version: " ${OpenCV_VERSION})
 
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-add_executable(hist.o hist.cpp)
+file(MAKE_DIRECTORY steps)
+file(MAKE_DIRECTORY plot)
 
-target_link_libraries(hist.o ${OpenCV_LIBS})
+add_executable(hist src/hist.cpp src/headers/misc.cpp)
+
+target_link_libraries(hist ${OpenCV_LIBS})
 
 add_custom_target(run
-    COMMAND hist.o
-    DEPENDS hist.o
+    COMMAND hist
+    DEPENDS hist
     WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
 )

@@ -1,63 +1,4 @@
-#include "opencv2/opencv.hpp"
-#include "opencv2/plot.hpp"
-#include <iostream>
-#include <algorithm>
-#include <numeric>
-#include <string>
-#include <math.h>
-
-
-void exp_gnu(const char *s, std::vector<cv::Mat> hist) {
-    FILE *out;
-    out = fopen(s, "w");
-    if (!out) {
-        printf("\
-            Broken lines, broken strings\n\
-            Broken threads, broken springs\n\
-            Broken idols, broken heads\n\
-            People sleeping in broken beds\n\
-            Ain't no use jiving\n\
-            Ain't no use joking\n\
-            EVERYTHING IS BROKEN\n\n\n\n\
-            Seriously though, this error should never be shown\n\
-            If you are a user, god speed\n\
-            Ẻ̵͎͓̕x̸̛̜̯͑i̴̳̇̕t̸̻̦̊̃ ̵͈͈̂w̸͔̍h̵̭͌ͅĩ̷̠̽l̷̻̠͌̒ë̴̻́ ̸̺̮̒̾y̵͉̌ȯ̷͉̻ü̴͍̟ ̸͓̬̂͋c̶̛̖ȧ̵̀͜n̵̓̒͜\n\
-        ");
-
-        return;
-    }
-    for (int i = 0; i < 256; i++) {
-        fprintf(out, "%f %f %f %f %f\n", hist[0].at<double>(i), hist[1].at<double>(i), hist[2].at<double>(i), hist[3].at<double>(i), hist[4].at<double>(i));
-    }
-    fclose(out);
-
-    printf("exported \n");
-}
-
-
-std::string type2str(int type) {
-    std::string r;
-
-    uchar depth = type & CV_MAT_DEPTH_MASK;
-    uchar chans = 1 + (type >> CV_CN_SHIFT);
-
-    switch ( depth ) {
-        case CV_8U:  r = "8U"; break;
-        case CV_8S:  r = "8S"; break;
-        case CV_16U: r = "16U"; break;
-        case CV_16S: r = "16S"; break;
-        case CV_32S: r = "32S"; break;
-        case CV_32F: r = "32F"; break;
-        case CV_64F: r = "64F"; break;
-        default:     r = "User"; break;
-    }
-
-    r += "C";
-    r += (chans+'0');
-
-    return r;
-}
-
+#include "headers/hist.h"
 
 cv::Mat PlotGraph(std::vector<cv::Mat> data) {
 
@@ -72,6 +13,21 @@ cv::Mat PlotGraph(std::vector<cv::Mat> data) {
     yG = data[3];
     yB = data[4];
 
+    double maxY = 0;
+
+    for (int i = 0; i < 256; ++i)
+    {
+        if (maxY < yL.at<double>(i))
+            maxY = yL.at<double>(i);
+
+        if (maxY < yR.at<double>(i))
+            maxY = yR.at<double>(i);
+        if (maxY < yG.at<double>(i))
+            maxY = yG.at<double>(i);
+        if (maxY < yB.at<double>(i))
+            maxY = yB.at<double>(i);
+    }
+
     cv::Ptr<cv::plot::Plot2d> plotL, plotR, plotG, plotB;
 
     plotL = cv::plot::Plot2d::create(x, yL);
@@ -85,25 +41,25 @@ cv::Mat PlotGraph(std::vector<cv::Mat> data) {
     plotG->setPlotBackgroundColor(cv::Vec3b( 56,  50,  38));
     plotB->setPlotBackgroundColor(cv::Vec3b( 56,  50,  38));
 
-    plotL->setPlotGridColor(      cv::Vec3b(31 , 151, 253));
-    plotR->setPlotGridColor(      cv::Vec3b(31 , 151, 253));
-    plotG->setPlotGridColor(      cv::Vec3b(31 , 151, 253));
-    plotB->setPlotGridColor(      cv::Vec3b(31 , 151, 253));
+    plotL->setPlotGridColor(cv::Vec3b(31 , 151, 253));
+    plotR->setPlotGridColor(cv::Vec3b(31 , 151, 253));
+    plotG->setPlotGridColor(cv::Vec3b(31 , 151, 253));
+    plotB->setPlotGridColor(cv::Vec3b(31 , 151, 253));
 
-    plotL->setPlotTextColor(      cv::Vec3b(255, 255, 255));
-    plotR->setPlotTextColor(      cv::Vec3b(255, 255, 255));
-    plotG->setPlotTextColor(      cv::Vec3b(255, 255, 255));
-    plotB->setPlotTextColor(      cv::Vec3b(255, 255, 255));
+    plotL->setPlotTextColor(cv::Vec3b(255, 255, 255));
+    plotR->setPlotTextColor(cv::Vec3b(255, 255, 255));
+    plotG->setPlotTextColor(cv::Vec3b(255, 255, 255));
+    plotB->setPlotTextColor(cv::Vec3b(255, 255, 255));
 
-    plotL->setPlotAxisColor(      cv::Vec3b(31 , 151, 253));
-    plotR->setPlotTextColor(      cv::Vec3b(255, 255, 255));
-    plotG->setPlotTextColor(      cv::Vec3b(255, 255, 255));
-    plotB->setPlotTextColor(      cv::Vec3b(255, 255, 255));
+    plotL->setPlotAxisColor(cv::Vec3b(31 , 151, 253));
+    plotR->setPlotTextColor(cv::Vec3b(255, 255, 255));
+    plotG->setPlotTextColor(cv::Vec3b(255, 255, 255));
+    plotB->setPlotTextColor(cv::Vec3b(255, 255, 255));
 
-    plotL->setPlotLineColor(      cv::Vec3b(224, 224, 224));
-    plotR->setPlotLineColor(      cv::Vec3b( 56,  38, 215));
-    plotG->setPlotLineColor(      cv::Vec3b(108, 221,  83));
-    plotB->setPlotLineColor(      cv::Vec3b(228, 198,  40));
+    plotL->setPlotLineColor(cv::Vec3b(224, 224, 224));
+    plotR->setPlotLineColor(cv::Vec3b( 56,  38, 215));
+    plotG->setPlotLineColor(cv::Vec3b(108, 221,  83));
+    plotB->setPlotLineColor(cv::Vec3b(228, 198,  40));
 
     plotL->setPlotLineWidth(2);
     plotR->setPlotLineWidth(2);
@@ -135,10 +91,10 @@ cv::Mat PlotGraph(std::vector<cv::Mat> data) {
     plotG->setMinY(0);
     plotB->setMinY(0);
 
-    plotL->setMaxY(6);
-    plotR->setMaxY(6);
-    plotG->setMaxY(6);
-    plotB->setMaxY(6);
+    plotL->setMaxY(maxY * 3 / 2);
+    plotR->setMaxY(maxY * 3 / 2);
+    plotG->setMaxY(maxY * 3 / 2);
+    plotB->setMaxY(maxY * 3 / 2);
 
     plotL->setMaxX(255);
     plotR->setMaxX(255);
@@ -259,10 +215,19 @@ std::vector<cv::Mat> get_hist(const std::string path) {
     return hist;
 }
 
+int main(int argc, char const *argv[]) {
 
-int main(void) {
+    printf("%d\n", argc);
 
-    std::string path = "../../pics/logo.jpg";
+    std::string path;
+    std::string def = "../../pics/logo.jpg";
+
+    if (argc == 2) {
+        path = argv[1];
+    }
+    else {
+        path = def;
+    }
 
 
     std::vector<cv::Mat> hist;
