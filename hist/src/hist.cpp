@@ -215,19 +215,18 @@ std::vector<cv::Mat> get_hist(const std::string path) {
     for (int r = 0; r < grey_image.rows; ++r)
         for (int c = 0; c < grey_image.cols; ++c)
             L.at<double>(grey_image(r, c)) += 1;
-    // etc...
 
     hist.push_back(X);
 
 
-    for (int i = 0; i < 256; ++i)
-    {
-        L.at<double>(i) = log10(L.at<double>(i));
+    // for (int i = 0; i < 256; ++i)
+    // {
+    //     L.at<double>(i) = log10(L.at<double>(i));
 
-        R.at<double>(i) = log10(R.at<double>(i));
-        G.at<double>(i) = log10(G.at<double>(i));
-        B.at<double>(i) = log10(B.at<double>(i));
-    }
+    //     R.at<double>(i) = log10(R.at<double>(i));
+    //     G.at<double>(i) = log10(G.at<double>(i));
+    //     B.at<double>(i) = log10(B.at<double>(i));
+    // }
 
 
     hist.push_back(L);

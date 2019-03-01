@@ -29,10 +29,13 @@ class ImageBlendigApp {
 };
 
 int main(int argc, const char* argv[]) {
-    String pathImgF(1 < argc ? argv[2] : "../testdata/cross_0256x0256.png");
-    Mat imgSrcF(imread(pathImgF));
-    String pathImgS(2 < argc ? argv[3] : "../testdata/apple_256x256.png");
-    Mat imgSrcS(imread(pathImgS));
+    String pathImgF(1 < argc ? argv[2] : "/home/oberon/university/opencv-lab/pics/river.jpg");
+    Mat imgSrcF, imgSrcS;
+    Mat image = imread(pathImgF);
+    resize(image, imgSrcF, Size(512, 512));
+    String pathImgS(2 < argc ? argv[3] : "/home/oberon/university/opencv-lab/pics/logo.jpg");
+    image = imread(pathImgS);
+    resize(image, imgSrcS, Size(512, 512));
 
     if (imgSrcF.data && imgSrcS.data) {
         ImageBlendigApp app;
